@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "audioteka"
+version = "0.1.0"
+description = ""
+authors = ["yellowBunny <zigggin3@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.28.1"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.1.3"
+black = "^22.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
