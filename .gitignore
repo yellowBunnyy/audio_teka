@@ -1,2 +1,6 @@
 /.venv
-/__pycache__
+/src/domain/__pycache__
+/tests/__pycache__
+/tests/.pytest_cache
+src/domain/audioteka_new.html
+audioteka_new.html

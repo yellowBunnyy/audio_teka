@@ -1,19 +1,42 @@
 from bs4 import BeautifulSoup
+from typing import List
 import re
+import pdb
 
-file = "audioteka_test.html"
 everything = set()
-with open(file) as f:
-    soup = BeautifulSoup(f, "html.parser")
-    l = soup.find_all("span")
-    pattern = "(<span>)(.+)(span)"
-    everything = set()
-    for text in l:
-        container = re.findall(pattern, str(text))
-        position = list(set([c[1].strip("</span>") for c in container]))
-        everything.add(position[0])
 
-for title in sorted(everything):
-    print(title)
+def extract_text_using_tag(file, tag:str="span"):
+    soup = BeautifulSoup(file, "html.parser")
+    finded_tags = soup.find_all(tag)
+    tags_withou_repetitions = finded_tags[1::2] # start from first index and grap every second
+    return tags_withou_repetitions
+
+def find_title(texts):
+    global everything
+    for text in texts:
+        everything.add(extract_title_from_string(str(text)))
+        
+
+def extract_title_from_string(string:str):
+    pattern = "<span>|</span>"
+    text = re.split(pattern, string)[1]
+    # pdb.set_trace()
+    if "<i>" in text:
+        text = text.replace("<i>", "odcinek: ").strip('</i>')
+    return text
 
 
+def printAllTitles(titles):
+    for title in sorted(titles):
+        print(title)
+    print(len(titles))
+
+def main():
+    file = "audioteka_new.html"
+    with open(file) as f:
+        finded_tags = extract_text_using_tag(f)
+        find_title(finded_tags)
+    printAllTitles(everything)
+
+if __name__ == "__main__":
+    main()

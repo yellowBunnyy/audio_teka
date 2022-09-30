@@ -23,7 +23,7 @@ while True:
     scroll_height = driver.execute_script("return document.body.scrollHeight;")  
     # Break the loop when the height we need to scroll to is larger than the total scroll height
     print(i,f" Wielkość ekranu: {screen_height * i}, {scroll_height}")
-    if (screen_height) * i > scroll_height:
+    if (screen_height) * i > scroll_height + screen_height:
         break
 print(f"summary counter: {i}")
 
