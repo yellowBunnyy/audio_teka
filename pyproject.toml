@@ -12,6 +12,9 @@ selenium = "^4.4.3"
 chromedriver-binary = "^106.0.5249.21.0"
 pandas = "^1.5.0"
 beautifulsoup4 = "^4.11.1"
+SQLAlchemy = "^1.4.41"
+psycopg2-binary = "^2.9.3"
+pydantic = "^1.10.2"
 
 
 [tool.poetry.group.dev.dependencies]
