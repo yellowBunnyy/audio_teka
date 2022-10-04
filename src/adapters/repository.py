@@ -1,9 +1,13 @@
 from abc import ABC, abstractmethod
-from sqlalchemy import select
+from src.domain import model, schemas
 
 class ArstractRepository(ABC):
     @abstractmethod
-    def get(self):
+    def add(self, title:schemas.TitleSchema):
+        raise NotImplementedError
+
+    @abstractmethod
+    def get(self, title:schemas.TitleSchema):
         raise NotImplementedError
 
     @abstractmethod
@@ -14,8 +18,11 @@ class SQLReopsitory(ArstractRepository):
     def __init__(self, session):
         self.session = session
     
-    def add(self, title):
-        return self.session.add(title)
+    def add(self, title:schemas.TitleSchema):
+        return self.session.add(title.title)
     
-    # def get(self, title):
-    #     return self.session.query().
+    def get(self, title:str):
+        return self.session.query(model.Title).filter(model.Title.title == title).first()
+    
+    def delete_all():
+        return "delete"
