@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+import pdb
+
 from src.domain import model, schemas
 
 class ArstractRepository(ABC):
@@ -19,7 +21,12 @@ class SQLReopsitory(ArstractRepository):
         self.session = session
     
     def add(self, title:schemas.TitleSchema):
-        return self.session.add(title.title)
+        # pdb.set_trace()
+        db_title = model.Title(title=title)
+        self.session.add(db_title)
+        self.session.commit()
+        self.session.refresh(db_title)
+        return f"added {title.title}"
     
     def get(self, title:str):
         return self.session.query(model.Title).filter(model.Title.title == title).first()
