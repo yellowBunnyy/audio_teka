@@ -6,6 +6,7 @@ import pytest
 
 from src import config
 
+
 def wait_for_postgres_to_come_up(engine):
     deadline = time.time() + 10
     while time.time() < deadline:
@@ -15,7 +16,7 @@ def wait_for_postgres_to_come_up(engine):
             return connection
         except OperationalError:
             time.sleep(0.5)
-    pytest.fail('Postgres never came up')
+    pytest.fail("Postgres never came up")
 
 
 engine = create_engine(config.get_postgres_uri())

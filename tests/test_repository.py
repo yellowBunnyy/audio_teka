@@ -1,26 +1,36 @@
 from src.adapters import repository
 from src.domain import schemas
 
+
 class FakeRepository(repository.ArstractRepository):
     data = set()
+
     def __init__(self, session):
         self.session = session
 
-    def add(self, title:schemas.TitleSchema):
+    def add(self, title: schemas.TitleSchema):
         self.data.add(title.title)
         self.session.commit()
-        
-    def get(self, title:str):
-        return next((audiobook_title  for audiobook_title in self.data if audiobook_title == title ))
-    
+
+    def get(self, title: str):
+        return next(
+            (
+                audiobook_title
+                for audiobook_title in self.data
+                if audiobook_title == title
+            )
+        )
+
     def delete_all(self):
         return "delete"
 
-class FakeSession():
+
+class FakeSession:
     commited = False
 
     def commit(self):
         self.commited = True
+
 
 def test_add_title():
     session = FakeSession()
@@ -29,6 +39,7 @@ def test_add_title():
     repo.add(data)
     assert repo.get("Roman") == "Roman"
     assert session.commited
+
 
 def test_get_title():
     session = FakeSession()

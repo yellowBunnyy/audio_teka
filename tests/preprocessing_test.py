@@ -6,13 +6,18 @@ from src.domain import preprocessing
 # Then wykonujemy sprawdzenia czy aplikacja zachowała się zgodnie z oczekiwaniami. Najczęściej poprzez wykorzystanie asercji lub interakcji z mockami
 
 
-@pytest.mark.parametrize(["inp_string","expected"],
-[   ["<span>Karolcia</span>", "Karolcia"],
-    ["<span>Obudź w sobie Olbrzyma</span>", "Obudź w sobie Olbrzyma"],
-    ["<span>Zapach Szkła</span>", "Zapach Szkła"],
-    ["<span>Invictus. Audioserial <i>9</i></span>", "Invictus. Audioserial odcinek: 9"]
-
-])
+@pytest.mark.parametrize(
+    ["inp_string", "expected"],
+    [
+        ["<span>Karolcia</span>", "Karolcia"],
+        ["<span>Obudź w sobie Olbrzyma</span>", "Obudź w sobie Olbrzyma"],
+        ["<span>Zapach Szkła</span>", "Zapach Szkła"],
+        [
+            "<span>Invictus. Audioserial <i>9</i></span>",
+            "Invictus. Audioserial odcinek: 9",
+        ],
+    ],
+)
 def test_extract_title_from_string_shuld_return_expected_string(inp_string, expected):
     result = preprocessing.extract_title_from_string(inp_string)
     assert result == expected
