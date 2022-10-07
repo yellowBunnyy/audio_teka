@@ -39,5 +39,5 @@ class SQLReopsitory(AbstractRepository):
     def delete(self, title: str):
         pass
 
-    def delete_all():
-        return "delete"
+    def delete_all(self):
+        self.session.query(model.Title).delete()

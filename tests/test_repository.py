@@ -1,8 +1,18 @@
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine
+import pytest
+import pdb
+
 from src.adapters import repository
 from src.domain import schemas
+from src import config
+from src.domain import model
 
 
-class FakeRepository(repository.ArstractRepository):
+
+
+
+class FakeRepository(repository.AbstractRepository):
     data = set()
 
     def __init__(self, session):
@@ -32,6 +42,35 @@ class FakeSession:
         self.commited = True
 
 
+def postgres_create_engine():
+    db_uri = config.get_postgres_uri()
+    return create_engine(db_uri)
+    
+
+def postgres_db_session():
+    session = Session(postgres_create_engine())
+    return session
+
+
+def add_rows_to_db():
+    titles = [model.Title(title="Marian"), model.Title(title="W pustyni i w puszczy"),
+    model.Title(title="Armagedon"), model.Title(title="Kanibal")]
+    engine = postgres_create_engine()
+    with Session(engine) as session:
+        for title in titles:
+            session.add(title)
+            session.commit()
+
+def test_remove_all_rows_from_source():
+    add_rows_to_db()
+    engine = postgres_create_engine()
+    session = Session(engine)
+    rows = session.query(model.Title).all()
+    # pdb.set_trace()
+    
+
+
+
 def test_add_title():
     session = FakeSession()
     repo = FakeRepository(session)
@@ -41,8 +80,12 @@ def test_add_title():
     assert session.commited
 
 
+
 def test_get_title():
     session = FakeSession()
     repo = FakeRepository(session)
     repo.data = {"book1", "book2", "book3"}
     assert repo.get("book2") == "book2"
+
+def test_delete_all_rows_in_table():
+    pass

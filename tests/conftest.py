@@ -6,6 +6,9 @@ import pytest
 
 from src import config
 
+def my_engine():
+    engine = create_engine(config.get_postgres_uri())
+    return engine
 
 def wait_for_postgres_to_come_up(engine):
     deadline = time.time() + 10
@@ -19,7 +22,7 @@ def wait_for_postgres_to_come_up(engine):
     pytest.fail("Postgres never came up")
 
 
-engine = create_engine(config.get_postgres_uri())
+engine = my_engine()
 wait_for_postgres_to_come_up(engine)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
