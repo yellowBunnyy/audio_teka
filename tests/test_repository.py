@@ -33,6 +33,9 @@ class FakeRepository(repository.AbstractRepository):
 
     def delete_all(self):
         return "delete"
+    
+    def delete(self,title):
+        pass
 
 
 class FakeSession:
@@ -65,9 +68,11 @@ def test_remove_all_rows_from_source():
     add_rows_to_db()
     engine = postgres_create_engine()
     session = Session(engine)
-    rows = session.query(model.Title).all()
-    # pdb.set_trace()
-    
+    session.query(model.Title).all()
+    repo = repository.SQLReopsitory(session)
+    repo.delete_all()
+    assert session.query(model.Title).all() == []
+
 
 
 
