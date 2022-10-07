@@ -9,9 +9,6 @@ from src import config
 from src.domain import model
 
 
-
-
-
 class FakeRepository(repository.AbstractRepository):
     data = set()
 
@@ -33,8 +30,8 @@ class FakeRepository(repository.AbstractRepository):
 
     def delete_all(self):
         return "delete"
-    
-    def delete(self,title):
+
+    def delete(self, title):
         pass
 
 
@@ -48,7 +45,7 @@ class FakeSession:
 def postgres_create_engine():
     db_uri = config.get_postgres_uri()
     return create_engine(db_uri)
-    
+
 
 def postgres_db_session():
     session = Session(postgres_create_engine())
@@ -56,13 +53,18 @@ def postgres_db_session():
 
 
 def add_rows_to_db():
-    titles = [model.Title(title="Marian"), model.Title(title="W pustyni i w puszczy"),
-    model.Title(title="Armagedon"), model.Title(title="Kanibal")]
+    titles = [
+        model.Title(title="Marian"),
+        model.Title(title="W pustyni i w puszczy"),
+        model.Title(title="Armagedon"),
+        model.Title(title="Kanibal"),
+    ]
     engine = postgres_create_engine()
     with Session(engine) as session:
         for title in titles:
             session.add(title)
             session.commit()
+
 
 def test_remove_all_rows_from_source():
     add_rows_to_db()
@@ -74,8 +76,6 @@ def test_remove_all_rows_from_source():
     assert session.query(model.Title).all() == []
 
 
-
-
 def test_add_title():
     session = FakeSession()
     repo = FakeRepository(session)
@@ -85,12 +85,12 @@ def test_add_title():
     assert session.commited
 
 
-
 def test_get_title():
     session = FakeSession()
     repo = FakeRepository(session)
     repo.data = {"book1", "book2", "book3"}
     assert repo.get("book2") == "book2"
 
-def test_delete_all_rows_in_table():
+
+def test_delete_selected_row_in_table():
     pass

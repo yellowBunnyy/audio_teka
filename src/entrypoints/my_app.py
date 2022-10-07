@@ -4,7 +4,7 @@ import pdb
 
 from src.domain import schemas
 from src.domain import model
-from src.adapters import repository 
+from src.adapters import repository
 from tests.conftest import engine, SessionLocal
 from src.services_layer import service
 
