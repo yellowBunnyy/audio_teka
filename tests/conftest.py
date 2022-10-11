@@ -30,7 +30,7 @@ def wait_for_postgres_to_come_up(engine):
 
 def create_table_title_in_db(engine):
     model.Base.metadata.create_all(bind=engine)
-    print(f"table title was created")
+    print(f"table 'title' was created")
 
 
 if __name__ == "__main__":

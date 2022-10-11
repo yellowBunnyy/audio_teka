@@ -14,7 +14,7 @@ class AbstractRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def delete(self, title: schemas.TitleSchema):
+    def delete_single_title(self, title: schemas.TitleSchema):
         raise NotImplementedError
 
     @abstractmethod
@@ -36,7 +36,7 @@ class SQLReopsitory(AbstractRepository):
             self.session.query(model.Title).filter(model.Title.title == title).first()
         )
 
-    def delete(self, title: str):
+    def delete_single_title(self, title: str):
         pass
 
     def delete_all(self):

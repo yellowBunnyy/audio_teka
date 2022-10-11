@@ -70,10 +70,21 @@ def test_remove_all_rows_from_source():
     add_rows_to_db()
     engine = postgres_create_engine()
     session = Session(engine)
-    session.query(model.Title).all()
     repo = repository.SQLReopsitory(session)
     repo.delete_all()
     assert session.query(model.Title).all() == []
+
+
+def test_delete_selected_row_in_table():
+    add_rows_to_db()
+    title_to_remove = "Armagedon"
+    engine = postgres_create_engine()
+    session = Session(engine)
+    repo = repository.SQLReopsitory(session)
+    repo.delete_single_title(title_to_remove)
+    assert session.query(model.Title).all() == [model.Title(title="Marian"),
+        model.Title(title="W pustyni i w puszczy"),
+        model.Title(title="Kanibal")]
 
 
 def test_add_title():
@@ -90,7 +101,3 @@ def test_get_title():
     repo = FakeRepository(session)
     repo.data = {"book1", "book2", "book3"}
     assert repo.get("book2") == "book2"
-
-
-def test_delete_selected_row_in_table():
-    pass
