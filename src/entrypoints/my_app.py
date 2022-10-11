@@ -3,12 +3,12 @@ from sqlalchemy.orm import Session
 import pdb
 
 from src.domain import schemas
-from src.domain import model
 from src.adapters import repository
 from tests.conftest import engine, SessionLocal
 from src.services_layer import service
+from src.adapters import orm
 
-model.Base.metadata.create_all(bind=engine)
+orm.metadata_obj.create_all(engine)
 
 app = FastAPI()
 

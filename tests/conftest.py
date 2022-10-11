@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 import pytest
 
 from src import config
-from src.domain import model
+from src.adapters import orm
 
 
 def my_engine():
@@ -29,11 +29,10 @@ def wait_for_postgres_to_come_up(engine):
 
 
 def create_table_title_in_db(engine):
-    model.Base.metadata.create_all(bind=engine)
+    orm.metadata_obj.create_all(bind=engine)
     print(f"table 'title' was created")
 
 
-if __name__ == "__main__":
-    engine = my_engine()
-    wait_for_postgres_to_come_up(engine)
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+engine = my_engine()
+wait_for_postgres_to_come_up(engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

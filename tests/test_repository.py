@@ -82,9 +82,11 @@ def test_delete_selected_row_in_table():
     session = Session(engine)
     repo = repository.SQLReopsitory(session)
     repo.delete_single_title(title_to_remove)
-    assert session.query(model.Title).all() == [model.Title(title="Marian"),
+    assert session.query(model.Title).all() == [
+        model.Title(title="Marian"),
         model.Title(title="W pustyni i w puszczy"),
-        model.Title(title="Kanibal")]
+        model.Title(title="Kanibal"),
+    ]
 
 
 def test_add_title():
