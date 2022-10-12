@@ -2,6 +2,7 @@ import time
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from sqlalchemy.exc import OperationalError
+from sqlalchemy import insert
 import pytest
 
 from src.adapters import orm
@@ -9,9 +10,19 @@ from src import config
 from src.domain import model
 
 
+
+
+@pytest.fixture
+def tear_down():
+    session = session_postgres()
+    yield session
+    clean_table()
+
+
 def clean_table():
     session = session_postgres()
     session.query(model.Title).delete()
+    session.commit()
 
 
 def wait_for_postgres_to_come_up(engine):
@@ -43,15 +54,15 @@ def add_title(title):
     session.commit()
 
 
-def test_add_title_to_source():
-    session = session_postgres()
+def test_add_title_to_source(tear_down):
+    session = tear_down
     title_to_add = "Hostel"
     add_title(title_to_add)
     assert session.query(model.Title).all() == [model.Title(title_to_add)]
 
 
-def test_add_few_titles():
-    session = session_postgres()
+def test_add_few_titles(tear_down):
+    session = tear_down
     titles_to_add = ["Hostel", "John", "Wick"]
     for title in titles_to_add:
         add_title(title)
