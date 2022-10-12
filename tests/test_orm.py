@@ -2,7 +2,7 @@ import time
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from sqlalchemy.exc import OperationalError
-from sqlalchemy import insert
+from sqlalchemy import text
 import pytest
 
 from src.adapters import orm
@@ -10,17 +10,14 @@ from src import config
 from src.domain import model
 
 
-
-
 @pytest.fixture
 def tear_down():
     session = session_postgres()
     yield session
-    clean_table()
+    clean_table(session)
 
 
-def clean_table():
-    session = session_postgres()
+def clean_table(session):
     session.query(model.Title).delete()
     session.commit()
 
@@ -48,12 +45,6 @@ def session_postgres():
     return session
 
 
-def add_title(title):
-    session = session_postgres()
-    session.add(model.Title(title))
-    session.commit()
-
-
 def test_add_title_to_source(tear_down):
     session = tear_down
     title_to_add = "Hostel"
@@ -69,3 +60,9 @@ def test_add_few_titles(tear_down):
     assert session.query(model.Title).all() == [
         model.Title(title) for title in titles_to_add
     ]
+
+
+def add_title(title):
+    session = session_postgres()
+    session.add(model.Title(title))
+    session.commit()

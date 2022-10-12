@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from sqlalchemy import delete, text, select
 import pdb
 
 from src.domain import model, schemas
@@ -37,7 +38,15 @@ class SQLReopsitory(AbstractRepository):
         )
 
     def delete_single_title(self, title: str):
+        title_id = self._get_id(title)
         pass
 
     def delete_all(self):
         self.session.query(model.Title).delete()
+
+    def _get_id(self, book_title: str = None):
+        book_title = "Armagedon"
+        stmt = text("SELECT id FROM titles WHERE title=:title")
+        stmt = stmt.bindparams(title=book_title)
+        [[title_id]] = self.session.execute(stmt).all()
+        return title_id

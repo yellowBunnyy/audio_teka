@@ -4,42 +4,20 @@ import pytest
 import pdb
 
 from src.adapters import repository
-from src.domain import schemas
 from src import config
 from src.domain import model
 
 
-class FakeRepository(repository.AbstractRepository):
-    data = set()
-
-    def __init__(self, session):
-        self.session = session
-
-    def add(self, title: schemas.TitleSchema):
-        self.data.add(title.title)
-        self.session.commit()
-
-    def get(self, title: str):
-        return next(
-            (
-                audiobook_title
-                for audiobook_title in self.data
-                if audiobook_title == title
-            )
-        )
-
-    def delete_all(self):
-        return "delete"
-
-    def delete(self, title):
-        pass
+@pytest.fixture
+def tear_down():
+    session = postgres_db_session()
+    yield session
+    clean_table(session)
 
 
-class FakeSession:
-    commited = False
-
-    def commit(self):
-        self.commited = True
+def clean_table(session):
+    session.query(model.Title).delete()
+    session.commit()
 
 
 def postgres_create_engine():
@@ -66,40 +44,23 @@ def add_rows_to_db():
             session.commit()
 
 
-def test_remove_all_rows_from_source():
+def test_remove_all_rows_from_source(tear_down):
     add_rows_to_db()
-    engine = postgres_create_engine()
-    session = Session(engine)
+    session = tear_down
     repo = repository.SQLReopsitory(session)
     repo.delete_all()
     assert session.query(model.Title).all() == []
 
 
-def test_delete_selected_row_in_table():
+def test_delete_selected_row_in_table(tear_down):
     add_rows_to_db()
-    title_to_remove = "Armagedon"
-    engine = postgres_create_engine()
-    session = Session(engine)
+    title_to_remove = "'Armagedon'"
+    session = tear_down
     repo = repository.SQLReopsitory(session)
     repo.delete_single_title(title_to_remove)
-    assert session.query(model.Title).all() == [
+    rows = session.query(model.Title).all()
+    assert rows == [
         model.Title(title="Marian"),
         model.Title(title="W pustyni i w puszczy"),
         model.Title(title="Kanibal"),
     ]
-
-
-def test_add_title():
-    session = FakeSession()
-    repo = FakeRepository(session)
-    data = schemas.TitleSchema(title="Roman")
-    repo.add(data)
-    assert repo.get("Roman") == "Roman"
-    assert session.commited
-
-
-def test_get_title():
-    session = FakeSession()
-    repo = FakeRepository(session)
-    repo.data = {"book1", "book2", "book3"}
-    assert repo.get("book2") == "book2"
