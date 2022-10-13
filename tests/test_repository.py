@@ -4,6 +4,7 @@ from sqlalchemy import text
 import pytest
 import pdb
 
+
 from src.adapters import repository
 from src import config
 from src.domain import model
@@ -13,7 +14,7 @@ from src.domain import model
 def tear_down():
     session = postgres_db_session()
     yield session
-    clean_table(session)
+    # clean_table(session)
 
 
 def clean_table(session):
@@ -65,3 +66,13 @@ def test_delete_selected_row_in_table(tear_down):
         model.Title(title="W pustyni i w puszczy"),
         model.Title(title="Kanibal"),
     ]
+
+def test_add_single_title_to_source(tear_down):
+    session = tear_down
+    title_to_add = "Pan Tadeusz"
+    repo = repository.SQLReopsitory(session)
+    repo.add(title_to_add)
+    rows = session.query(model.Title).all()
+    assert rows == [model.Title(title=title_to_add)]
+
+def test_
