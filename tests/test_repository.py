@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
+from sqlalchemy import text
 import pytest
 import pdb
 
@@ -54,7 +55,7 @@ def test_remove_all_rows_from_source(tear_down):
 
 def test_delete_selected_row_in_table(tear_down):
     add_rows_to_db()
-    title_to_remove = "'Armagedon'"
+    title_to_remove = "Armagedon"
     session = tear_down
     repo = repository.SQLReopsitory(session)
     repo.delete_single_title(title_to_remove)
