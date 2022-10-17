@@ -38,3 +38,7 @@ def delete_single_row(
     row = repository.delete_single_title(title, get_id)
     session.commit()
     return row
+
+def delete_all_rows(session: Session, repository: repository.AbstractRepository):
+    repository.delete_all()
+    

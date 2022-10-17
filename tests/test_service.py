@@ -1,6 +1,6 @@
 import pytest
-from unittest.mock import patch
 import pdb
+
 
 from src.adapters import repository
 from src.services_layer import service
@@ -33,7 +33,7 @@ class FakeRepository(repository.AbstractRepository):
         return {get_id: finded_title}
 
     def delete_all(self):
-        return "delete"
+        return []
 
     def _get_id(self, title):
         return 1
@@ -87,3 +87,18 @@ def test_happy_patch_delete_single_row():
     repo = FakeRepository(["Damian", title_to_remove])
     row = service.delete_single_row(title_to_remove, session, repo)
     assert row == {1: title_to_remove}
+    assert session.commited
+
+
+def test_unhappy_path_remove_single_row():
+    title_to_remove = "Ala"
+    session = FakeSession()
+    repo = FakeRepository(["Damian", "Waldek"])
+    with pytest.raises(service.NotTitleInSourceException, match=f"Can't find title: {title_to_remove}."):
+        service.delete_single_row(title_to_remove, session, repo)
+
+# def test_happy_patch_delete_all_rows():
+#     session = FakeSession()
+#     repo = FakeRepository(["Damian", "Waldek"])
+#     service.delete_all()
+    
