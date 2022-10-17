@@ -1,4 +1,5 @@
 import pytest
+from unittest.mock import patch
 import pdb
 
 from src.adapters import repository
@@ -24,11 +25,12 @@ class FakeRepository(repository.AbstractRepository):
         except StopIteration:
             return None
 
-    def delete(self, title):
+    def delete_single_title(self, title):
         pass
 
     def delete_all(self):
         return "delete"
+
 
 
 class FakeSession:
@@ -71,3 +73,7 @@ def test_unhappy_path_get_not_existing_title():
         match=f"Can't find title: {not_existing_title}.",
     ):
         service.get_title(not_existing_title, repo).title
+
+def test_happy_patch_delete_single_row():
+    repo = FakeRepository(["Damian", "Juzek"])
+

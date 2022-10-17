@@ -46,7 +46,6 @@ class SQLReopsitory(AbstractRepository):
         return {title_id:title}
         
     def _get_id(self, book_title: str = None)-> int:
-        book_title = "Armagedon"
         stmt = text("SELECT id FROM titles WHERE title=:title")
         stmt = stmt.bindparams(title=book_title)
         [[title_id]] = self.session.execute(stmt).all()
@@ -55,7 +54,3 @@ class SQLReopsitory(AbstractRepository):
     def delete_all(self):
         self.session.query(model.Title).delete()
 
-    
-        
-
-        

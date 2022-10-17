@@ -1,3 +1,4 @@
+from typing import Dict
 from sqlalchemy.orm import Session
 from src.domain import schemas
 from src.adapters import repository
@@ -25,3 +26,10 @@ def get_title(title: str, repository: repository.AbstractRepository):
     if not title_to_find:
         raise NotTitleInSourceException(f"Can't find title: {title}.")
     return schemas.TitleSchema(title=title_to_find)
+
+def delete_single_row(title:str, repository: repository.AbstractRepository)-> Dict:
+    title_to_delete = repository.get(title)
+    if not title_to_delete:
+        raise NotTitleInSourceException(f"Can't find title: {title}.")
+    row = repository.delete_single_title(title)
+    return row
