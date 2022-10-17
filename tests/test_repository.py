@@ -85,3 +85,15 @@ def test_get_single_row_from_table(tear_down):
     repo = repository.SQLReopsitory(session)
     row = repo.get(title)
     assert row == model.Title(title=title)
+
+def test_get_all_rows_from_table(tear_down):
+    session = tear_down
+    add_rows_to_db()
+    repo = repository.SQLReopsitory(session)
+    rows = repo.get_all_rows()
+    assert rows == [
+        model.Title(title="Marian"),
+        model.Title(title="W pustyni i w puszczy"),
+        model.Title(title="Armagedon"),
+        model.Title(title="Kanibal"),
+    ]

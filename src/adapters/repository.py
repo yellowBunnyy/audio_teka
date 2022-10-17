@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from requests import session
 from sqlalchemy import text, delete
 from typing import Dict
 import pdb
@@ -54,3 +55,6 @@ class SQLReopsitory(AbstractRepository):
 
     def delete_all(self):
         self.session.query(model.Title).delete()
+    
+    def get_all_rows(self):
+        return self.session.query(model.Title).all()
