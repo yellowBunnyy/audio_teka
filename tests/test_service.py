@@ -25,11 +25,17 @@ class FakeRepository(repository.AbstractRepository):
         except StopIteration:
             return None
 
-    def delete_single_title(self, title):
-        pass
+    def delete_single_title(self, title, _get_id):
+        finded_title = [book_title for book_title in self.titles_source if book_title == title][0]
+        get_id = _get_id(title)
+        return {get_id: finded_title}
+
 
     def delete_all(self):
         return "delete"
+    
+    def _get_id(self, title):
+        return 1
 
 
 
@@ -74,6 +80,12 @@ def test_unhappy_path_get_not_existing_title():
     ):
         service.get_title(not_existing_title, repo).title
 
+
 def test_happy_patch_delete_single_row():
-    repo = FakeRepository(["Damian", "Juzek"])
+    title_to_remove = "Juzek"
+    session = FakeSession()
+    repo = FakeRepository(["Damian", title_to_remove])
+    row = service.delete_single_row(title_to_remove, session, repo)
+    assert row == {1:title_to_remove}
+
 

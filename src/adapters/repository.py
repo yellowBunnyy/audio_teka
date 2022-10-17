@@ -38,12 +38,12 @@ class SQLReopsitory(AbstractRepository):
         return self.session.query(model.Title).filter(model.Title.title == title).first()
 
 
-    def delete_single_title(self, title: str)-> Dict:
-        title_id = self._get_id(title)
+    def delete_single_title(self, title: str, _get_id)-> Dict:
+        title_id = _get_id(title)
         stmt = text("DELETE FROM titles WHERE id=:title_id")
         stmt = stmt.bindparams(title_id=title_id)
         self.session.execute(stmt)
-        return {title_id:title}
+        return {title_id: title}
         
     def _get_id(self, book_title: str = None)-> int:
         stmt = text("SELECT id FROM titles WHERE title=:title")

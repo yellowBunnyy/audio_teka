@@ -59,7 +59,8 @@ def test_delete_selected_row_in_table(tear_down):
     title_to_remove = "Armagedon"
     session = tear_down
     repo = repository.SQLReopsitory(session)
-    repo.delete_single_title(title_to_remove)
+    get_id = repo._get_id
+    repo.delete_single_title(title_to_remove, get_id)
     rows = session.query(model.Title).all()
     assert rows == [
         model.Title(title="Marian"),
