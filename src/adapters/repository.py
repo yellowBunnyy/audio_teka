@@ -35,9 +35,8 @@ class SQLReopsitory(AbstractRepository):
         return f"added {title}"
 
     def get(self, title: str):
-        return (
-            self.session.query(model.Title).filter(model.Title.title == title).first()
-        )
+        return self.session.query(model.Title).filter(model.Title.title == title).first()
+
 
     def delete_single_title(self, title: str)-> Dict:
         title_id = self._get_id(title)

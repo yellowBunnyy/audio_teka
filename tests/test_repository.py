@@ -14,7 +14,7 @@ from src.domain import model
 def tear_down():
     session = postgres_db_session()
     yield session
-    # clean_table(session)
+    clean_table(session)
 
 
 def clean_table(session):
@@ -75,4 +75,10 @@ def test_add_single_title_to_source(tear_down):
     rows = session.query(model.Title).all()
     assert rows == [model.Title(title=title_to_add)]
 
-def test_
+def test_get_single_row_from_table(tear_down):
+    add_rows_to_db()
+    title = "Kanibal"
+    session = tear_down
+    repo = repository.SQLReopsitory(session)
+    row = repo.get(title)
+    assert row == model.Title(title=title)
