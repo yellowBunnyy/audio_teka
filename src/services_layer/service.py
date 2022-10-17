@@ -27,7 +27,10 @@ def get_title(title: str, repository: repository.AbstractRepository):
         raise NotTitleInSourceException(f"Can't find title: {title}.")
     return schemas.TitleSchema(title=title_to_find)
 
-def delete_single_row(title:str, session: Session, repository: repository.AbstractRepository)-> Dict:
+
+def delete_single_row(
+    title: str, session: Session, repository: repository.AbstractRepository
+) -> Dict:
     title_to_delete = repository.get(title)
     if not title_to_delete:
         raise NotTitleInSourceException(f"Can't find title: {title}.")

@@ -68,6 +68,7 @@ def test_delete_selected_row_in_table(tear_down):
         model.Title(title="Kanibal"),
     ]
 
+
 def test_add_single_title_to_source(tear_down):
     session = tear_down
     title_to_add = "Pan Tadeusz"
@@ -75,6 +76,7 @@ def test_add_single_title_to_source(tear_down):
     repo.add(title_to_add)
     rows = session.query(model.Title).all()
     assert rows == [model.Title(title=title_to_add)]
+
 
 def test_get_single_row_from_table(tear_down):
     add_rows_to_db()

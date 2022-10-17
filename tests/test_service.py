@@ -26,17 +26,17 @@ class FakeRepository(repository.AbstractRepository):
             return None
 
     def delete_single_title(self, title, _get_id):
-        finded_title = [book_title for book_title in self.titles_source if book_title == title][0]
+        finded_title = [
+            book_title for book_title in self.titles_source if book_title == title
+        ][0]
         get_id = _get_id(title)
         return {get_id: finded_title}
 
-
     def delete_all(self):
         return "delete"
-    
+
     def _get_id(self, title):
         return 1
-
 
 
 class FakeSession:
@@ -86,6 +86,4 @@ def test_happy_patch_delete_single_row():
     session = FakeSession()
     repo = FakeRepository(["Damian", title_to_remove])
     row = service.delete_single_row(title_to_remove, session, repo)
-    assert row == {1:title_to_remove}
-
-
+    assert row == {1: title_to_remove}
