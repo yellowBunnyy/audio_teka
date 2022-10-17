@@ -41,4 +41,5 @@ def delete_single_row(
 
 def delete_all_rows(session: Session, repository: repository.AbstractRepository):
     repository.delete_all()
-    
+    session.commit()
+    return repository.get_all_rows()

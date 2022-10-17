@@ -37,6 +37,9 @@ class FakeRepository(repository.AbstractRepository):
 
     def _get_id(self, title):
         return 1
+    
+    def get_all_rows(self):
+        return list(self.titles_source)
 
 
 class FakeSession:
@@ -97,8 +100,8 @@ def test_unhappy_path_remove_single_row():
     with pytest.raises(service.NotTitleInSourceException, match=f"Can't find title: {title_to_remove}."):
         service.delete_single_row(title_to_remove, session, repo)
 
-# def test_happy_patch_delete_all_rows():
-#     session = FakeSession()
-#     repo = FakeRepository(["Damian", "Waldek"])
-#     service.delete_all()
+def test_happy_patch_delete_all_rows():
+    session = FakeSession()
+    repo = FakeRepository(["Damian", "Waldek"])
+    service.delete_all()
     
