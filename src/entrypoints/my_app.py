@@ -26,7 +26,7 @@ def pong():
     return schemas.TitleSchema(title="pong")
 
 
-@app.post("/send_title", response_model=schemas.TitleSchema)
+@app.post("/add_title", response_model=schemas.TitleSchema)
 def create_title(title: schemas.TitleSchema, session: Session = Depends(get_db)):
     repo = repository.SQLReopsitory(session)
     try:
@@ -38,7 +38,9 @@ def create_title(title: schemas.TitleSchema, session: Session = Depends(get_db))
 @app.get("/get_title", response_model=schemas.TitleSchema)
 def get_title(title: schemas.TitleSchema, session: Session = Depends(get_db)):
     repo = repository.SQLReopsitory(session)
-    title = repo.get(title.title)
-    if not title:
-        return f"title: {title.title} not in db!!"
-    return schemas.TitleSchema(title=title)
+    try:
+        title = service.get_title(title.title, repo)
+        return title
+    except service.NotTitleInSourceException:
+        raise HTTPException(status_code=400, detail=f"title: {title.title} not in db!!")
+

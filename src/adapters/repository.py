@@ -24,6 +24,10 @@ class AbstractRepository(ABC):
     @abstractmethod
     def delete_all():
         raise NotImplementedError
+    
+    @abstractmethod
+    def get_all_rows():
+        raise NotImplementedError
 
 
 class SQLReopsitory(AbstractRepository):
