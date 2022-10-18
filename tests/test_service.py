@@ -33,7 +33,7 @@ class FakeRepository(repository.AbstractRepository):
         return {get_id: finded_title}
 
     def delete_all(self):
-        return []
+        self.titles_source = set()
 
     def _get_id(self, title):
         return 1
@@ -103,5 +103,7 @@ def test_unhappy_path_remove_single_row():
 def test_happy_patch_delete_all_rows():
     session = FakeSession()
     repo = FakeRepository(["Damian", "Waldek"])
-    service.delete_all()
+    empty_db = service.delete_all_rows(session, repo)
+    assert empty_db == []
+    assert session.commited
     
