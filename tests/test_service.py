@@ -1,7 +1,7 @@
 import pytest
 import pdb
 
-
+from src.domain import schemas
 from src.adapters import repository
 from src.services_layer import service
 
@@ -14,12 +14,13 @@ class FakeRepository(repository.AbstractRepository):
         self.titles_source.add(title)
 
     def get(self, title: str):
+        title_source = [schemas.TitleSchema(title=book_title) for book_title in self.titles_source]
         try:
             return next(
                 (
                     audiobook_title
-                    for audiobook_title in self.titles_source
-                    if audiobook_title == title
+                    for audiobook_title in title_source
+                    if audiobook_title.title == title
                 )
             )
         except StopIteration:
