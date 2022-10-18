@@ -39,7 +39,7 @@ def main():
     my_url = "https://web.audioteka.com/pl/do-uslyszenia-w-klubie.html"
     driver = get_driver(my_url)
     counter = 0
-    print(f"Screan height: {get_screen_height(driver)}")
+    print(f"Screen height: {get_screen_height(driver)}")
     while True:
         if scroll_down_page(driver, counter):
             break

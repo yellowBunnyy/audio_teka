@@ -1,9 +1,10 @@
 import pytest
 import pdb
 
-from src.domain import schemas
+from src.domain import schemas, preprocessing
 from src.adapters import repository
 from src.services_layer import service
+
 
 
 class FakeRepository(repository.AbstractRepository):
@@ -108,3 +109,11 @@ def test_happy_patch_delete_all_rows():
     assert empty_db == []
     assert session.commited
     
+
+def test_save_all_title_from_file_to_db():
+    session = FakeSession()
+    repo = FakeRepository([])
+    data_to_add = preprocessing.main()
+    service.save_all_titles_to_db(session, repo)
+    assert len(repo.get_all_rows()) == len(data_to_add)
+    assert session.commited

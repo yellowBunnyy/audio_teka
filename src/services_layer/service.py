@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 import pdb
 
 
-from src.domain import schemas
+from src.domain import schemas, preprocessing
 from src.adapters import repository
 
 
@@ -46,3 +46,10 @@ def delete_all_rows(session: Session, repository: repository.AbstractRepository)
     repository.delete_all()
     session.commit()
     return repository.get_all_rows()
+
+def save_all_titles_to_db(session:Session, repository: repository.AbstractRepository):
+    titles = preprocessing.main()
+    for title in titles:
+        repository.add(title)
+    session.commit()
+    

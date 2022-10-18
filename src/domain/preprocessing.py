@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import re
-
+import os
+import pdb
 everything = set()
 
 
@@ -23,7 +24,7 @@ def main():
     with open(file) as f:
         finded_tags = extract_text_using_tag(f)
         find_title(finded_tags)
-    printAllTitles(everything)
+    return everything
 
 
 def extract_text_using_tag(file, tag: str = "span"):

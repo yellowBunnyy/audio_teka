@@ -8,13 +8,13 @@ import pdb
 from src.adapters import repository
 from src import config
 from src.domain import model
-
+# from src.services_layer import service
 
 @pytest.fixture
 def tear_down():
     session = postgres_db_session()
     yield session
-    clean_table(session)
+    # clean_table(session)
 
 
 def clean_table(session):
@@ -97,3 +97,8 @@ def test_get_all_rows_from_table(tear_down):
         model.Title(title="Armagedon"),
         model.Title(title="Kanibal"),
     ]
+
+# def test_add_all_titles_to_db(tear_down):
+#     session = tear_down
+#     repo = repository.SQLReopsitory(session)
+#     service.save_all_titles_to_db(session, repo)
