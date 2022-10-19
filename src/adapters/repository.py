@@ -43,6 +43,7 @@ class SQLReopsitory(AbstractRepository):
         return (
             self.session.query(model.Title).filter(model.Title.title == title).first()
         )
+    
 
     def delete_single_title(self, title: str, _get_id) -> Dict:
         title_id = _get_id(title)

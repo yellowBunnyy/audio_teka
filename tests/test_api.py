@@ -78,3 +78,10 @@ def test_get_book_title_from_source(tear_down):
     assert r.status_code == 200
     assert r.json()["title"] == "Aligator"
 
+def test_foo():
+    searched_book_title = "Abi ma pla"
+    data = {"title":searched_book_title}
+    url = f"{config.get_api_url()}/get_title"
+    r = requests.get(url, json=data)
+    assert r.status_code == 200
+    assert r.json()["title"] == searched_book_title
