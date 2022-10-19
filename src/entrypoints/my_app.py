@@ -1,5 +1,7 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from sqlalchemy.orm import Session
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
 import pdb
 
 from src.domain import schemas
@@ -11,7 +13,7 @@ from src.adapters import orm
 orm.metadata_obj.create_all(engine)
 
 app = FastAPI()
-
+templates = Jinja2Templates(directory="src/page/templates")
 
 def get_db():
     db = SessionLocal()
@@ -21,9 +23,12 @@ def get_db():
         db.close()
 
 
-@app.get("/ping", response_model=schemas.TitleSchema)
-def pong():
-    return schemas.TitleSchema(title="pong")
+@app.get("/ping", response_class=HTMLResponse)
+def pong(request: Request):
+    data = {
+        "page": "Home page"
+    }
+    return templates.TemplateResponse("index.html", {"request":request, "data":data})
 
 
 @app.post("/add_title", response_model=schemas.TitleSchema)
