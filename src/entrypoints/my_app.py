@@ -1,6 +1,5 @@
 from fastapi import Depends, FastAPI, HTTPException, Request
 from sqlalchemy.orm import Session
-from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 import pdb
 
@@ -13,7 +12,7 @@ from src.adapters import orm
 orm.metadata_obj.create_all(engine)
 
 app = FastAPI()
-templates = Jinja2Templates(directory="src/page/templates")
+
 
 def get_db():
     db = SessionLocal()
@@ -24,11 +23,17 @@ def get_db():
 
 
 @app.get("/ping", response_class=HTMLResponse)
-def pong(request: Request):
+def pong():
     data = {
-        "page": "Home page"
+        "ping": "pong"
     }
-    return templates.TemplateResponse("index.html", {"request":request, "data":data})
+    html_response=f"""
+    <h1>
+        Welcome to FastAPI.
+        {data['ping']}.
+    </h1>
+    """
+    return HTMLResponse(html_response)
 
 
 @app.post("/add_title", response_model=schemas.TitleSchema)

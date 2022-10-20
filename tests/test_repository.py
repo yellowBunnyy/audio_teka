@@ -14,7 +14,7 @@ from src.domain import model
 def tear_down():
     session = postgres_db_session()
     yield session
-    # clean_table(session)
+    clean_table(session)
 
 
 def clean_table(session):
