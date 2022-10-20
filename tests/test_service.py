@@ -3,7 +3,8 @@ import pdb
 
 from src.domain import schemas, preprocessing
 from src.adapters import repository
-from src.services_layer import service
+from src.services_layer import service, unit_of_work
+
 
 
 
@@ -43,6 +44,16 @@ class FakeRepository(repository.AbstractRepository):
     def get_all_rows(self):
         return list(self.titles_source)
 
+class FakeUnitOfWork(unit_of_work.AbstractUnitOfWork):
+    def __init__(self):
+        self.repo = FakeRepository([])
+        self.commited = False
+
+    def commit(self):
+        self.commited = True
+    
+    def rollback(self):
+        pass
 
 class FakeSession:
     commited = False
@@ -52,12 +63,19 @@ class FakeSession:
 
 
 def test_add_title_first_time():
-    session = FakeSession()
-    repo = FakeRepository([])
-    title = "Marek"
-    service.add_title(title, session, repo)
-    assert repo.titles_source == {"Marek"}
-    assert session.commited
+    uow = FakeUnitOfWork()
+    title_to_add = "Korona"
+    service.add_title(title_to_add, uow)
+    assert uow.repo.get(title_to_add) == schemas.TitleSchema(title=title_to_add)
+    assert uow.commited
+    
+
+    # session = FakeSession()
+    # repo = FakeRepository([])
+    # title = "Marek"
+    # service.add_title(title, session, repo)
+    # assert repo.titles_source == {"Marek"}
+    # assert session.commited
 
 
 def test_unhappy_path_add_same_string_second_time():

@@ -5,6 +5,7 @@ import pdb
 
 from src.domain import schemas, preprocessing
 from src.adapters import repository
+from src.services_layer import unit_of_work
 
 
 class TitleExistingInSource(Exception):
@@ -15,12 +16,12 @@ class NotTitleInSourceException(Exception):
     pass
 
 
-def add_title(title: str, session: Session, repository: repository.AbstractRepository):
-    existing_title = repository.get(title)
+def add_title(title: str, uow: unit_of_work.AbstractUnitOfWork):
+    existing_title = uow.repo.get(title)
     if existing_title:
         raise TitleExistingInSource("Title: {title} exists in source!")
-    repository.add(title)
-    session.commit()
+    uow.repo.add(title)
+    uow.commit()
     return schemas.TitleSchema(title=title)
 
 
