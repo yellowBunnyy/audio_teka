@@ -1,5 +1,6 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from sqlalchemy.orm import Session
+from fastapi.responses import HTMLResponse
 import pdb
 
 from src.domain import schemas
@@ -21,9 +22,18 @@ def get_db():
         db.close()
 
 
-@app.get("/ping", response_model=schemas.TitleSchema)
+@app.get("/ping", response_class=HTMLResponse)
 def pong():
-    return schemas.TitleSchema(title="pong")
+    data = {
+        "ping": "pong"
+    }
+    html_response=f"""
+    <h1>
+        Welcome to FastAPI.
+        {data['ping']}.
+    </h1>
+    """
+    return HTMLResponse(html_response)
 
 
 @app.post("/add_title", response_model=schemas.TitleSchema)
