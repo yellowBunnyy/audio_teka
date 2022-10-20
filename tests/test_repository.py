@@ -8,7 +8,7 @@ import pdb
 from src.adapters import repository
 from src import config
 from src.domain import model
-# from src.services_layer import service
+
 
 @pytest.fixture
 def tear_down():
