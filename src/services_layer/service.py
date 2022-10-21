@@ -17,12 +17,13 @@ class NotTitleInSourceException(Exception):
 
 
 def add_title(title: str, uow: unit_of_work.AbstractUnitOfWork):
-    existing_title = uow.repo.get(title)
-    if existing_title:
-        raise TitleExistingInSource("Title: {title} exists in source!")
-    uow.repo.add(title)
-    uow.commit()
-    return schemas.TitleSchema(title=title)
+    with uow:
+        existing_title = uow.repo.get(title)
+        if existing_title:
+            raise TitleExistingInSource("Title: {title} exists in source!")
+        uow.repo.add(title)
+        uow.commit()
+        return schemas.TitleSchema(title=title)
 
 
 def get_title(title: str, repository: repository.AbstractRepository):
