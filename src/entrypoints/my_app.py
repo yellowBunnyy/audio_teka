@@ -6,8 +6,9 @@ import pdb
 from src.domain import schemas
 from src.adapters import repository
 from tests.conftest import engine, SessionLocal
-from src.services_layer import service
+from src.services_layer import service, unit_of_work
 from src.adapters import orm
+
 
 orm.metadata_obj.create_all(engine)
 
@@ -15,11 +16,11 @@ app = FastAPI()
 
 
 def get_db():
-    db = SessionLocal()
+    db = SessionLocal
     try:
         yield db
     finally:
-        db.close()
+        db().close()
 
 
 @app.get("/ping", response_class=HTMLResponse)
@@ -37,19 +38,19 @@ def pong():
 
 
 @app.post("/add_title", response_model=schemas.TitleSchema)
-def create_title(title: schemas.TitleSchema, session: Session = Depends(get_db)):
-    repo = repository.SQLReopsitory(session)
+def create_title(title: schemas.TitleSchema, session_factory: Session = Depends(get_db)):
+    uow = unit_of_work.SqlAlchemyUnitOfWork(session_factory)
     try:
-        return service.add_title(title.title, session, repo)
+        return service.add_title(title.title, uow)
     except:
         raise HTTPException(status_code=400, detail=f"title: {title.title} is in db!!")
 
 
 @app.get("/get_title", response_model=schemas.TitleSchema)
-def get_title(title: schemas.TitleSchema, session: Session = Depends(get_db)):
-    repo = repository.SQLReopsitory(session)
+def get_title(title: schemas.TitleSchema, session_factory: Session = Depends(get_db)):
+    uow = unit_of_work.SqlAlchemyUnitOfWork(session_factory)
     try:
-        title = service.get_title(title.title, repo)
+        title = service.get_title(title.title, uow)
         return title
     except service.NotTitleInSourceException:
         raise HTTPException(status_code=400, detail=f"title: {title.title} not in db!!")
