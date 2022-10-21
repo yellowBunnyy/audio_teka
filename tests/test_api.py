@@ -77,8 +77,17 @@ def test_get_book_title_from_source(tear_down):
     r = requests.get(url, json=data)
     assert r.status_code == 200
     assert r.json()["title"] == "Aligator"
-# TO OD 
-# add unhhapy path to get title
+
+
+def test_unhhappy_path_to_get_title_which_not_exist_in_db(tear_down):
+    add_rows_to_db()
+    title_which_dont_exist_in_db = "Kalafior"
+    data = {"title": title_which_dont_exist_in_db}
+    url = f"{config.get_api_url()}/get_title"
+    r = requests.get(url, json=data)
+    assert r.status_code == 400
+    assert r.json()["detail"] == f"title: {title_which_dont_exist_in_db} not in db!!"
+    
 
 # def test_foo():
 #     searched_book_title = "Abi ma pla"
