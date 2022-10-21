@@ -93,49 +93,50 @@ def test_unhappy_path_add_same_string_second_time():
 
 
 def test_happy_path_get_title():
-    repo = FakeRepository(["John", "Denerys"])
+    uow = FakeUnitOfWork()
+    uow.repo.titles_source = set(["John", "Denerys"])
     title_to_find = "Denerys"
-    assert service.get_title(title_to_find, repo).title == title_to_find
+    assert service.get_title(title_to_find, uow).title == title_to_find
 
 
 def test_unhappy_path_get_not_existing_title():
     not_existing_title = "Wall"
-    repo = FakeRepository(["John", "Denerys"])
+    uow = FakeUnitOfWork()
+    uow.repo.titles_source = set(["John", "Denerys"])
     with pytest.raises(
         service.NotTitleInSourceException,
         match=f"Can't find title: {not_existing_title}.",
     ):
-        service.get_title(not_existing_title, repo).title
+        service.get_title(not_existing_title, uow).title
 
 
 def test_happy_patch_delete_single_row():
     title_to_remove = "Juzek"
-    session = FakeSession()
-    repo = FakeRepository(["Damian", title_to_remove])
-    row = service.delete_single_row(title_to_remove, session, repo)
+    uow = FakeUnitOfWork()
+    uow.repo.titles_source = set(["Damian", title_to_remove])
+    row = service.delete_single_row(title_to_remove, uow)
     assert row == {1: title_to_remove}
-    assert session.commited
+    assert uow.commited
 
 
 def test_unhappy_path_remove_single_row():
     title_to_remove = "Ala"
-    session = FakeSession()
-    repo = FakeRepository(["Damian", "Waldek"])
+    uow = FakeUnitOfWork()
+    uow.repo.titles_source = set([])
     with pytest.raises(service.NotTitleInSourceException, match=f"Can't find title: {title_to_remove}."):
-        service.delete_single_row(title_to_remove, session, repo)
+        service.delete_single_row(title_to_remove, uow)
 
 def test_happy_patch_delete_all_rows():
-    session = FakeSession()
-    repo = FakeRepository(["Damian", "Waldek"])
-    empty_db = service.delete_all_rows(session, repo)
+    uow = FakeUnitOfWork()
+    uow.repo.titles_source = ["Damian", "Waldek"]
+    empty_db = service.delete_all_rows(uow)
     assert empty_db == []
-    assert session.commited
+    assert uow.commited
     
 
 def test_save_all_title_from_file_to_db():
-    session = FakeSession()
-    repo = FakeRepository([])
+    uow = FakeUnitOfWork()
     data_to_add = preprocessing.main()
-    service.save_all_titles_to_db(session, repo)
-    assert len(repo.get_all_rows()) == len(data_to_add)
-    assert session.commited
+    service.save_all_titles_to_db(uow)
+    assert len(uow.repo.get_all_rows()) == len(data_to_add)
+    assert uow.commited

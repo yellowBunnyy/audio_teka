@@ -47,10 +47,10 @@ def create_title(title: schemas.TitleSchema, session_factory: Session = Depends(
 
 
 @app.get("/get_title", response_model=schemas.TitleSchema)
-def get_title(title: schemas.TitleSchema, session: Session = Depends(get_db)):
-    repo = repository.SQLReopsitory(session)
+def get_title(title: schemas.TitleSchema, session_factory: Session = Depends(get_db)):
+    uow = unit_of_work.SqlAlchemyUnitOfWork(session_factory)
     try:
-        title = service.get_title(title.title, repo)
+        title = service.get_title(title.title, uow)
         return title
     except service.NotTitleInSourceException:
         raise HTTPException(status_code=400, detail=f"title: {title.title} not in db!!")

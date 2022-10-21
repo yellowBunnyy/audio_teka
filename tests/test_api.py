@@ -69,14 +69,16 @@ def test_unhappy_path_trying_add_same_title_twice(tear_down):
     assert r.json()["detail"] == f"title: Marian is in db!!"
 
 
-# def test_get_book_title_from_source(tear_down):
-#     add_rows_to_db()
-#     searched_book_title = "Aligator"
-#     data = {"title":searched_book_title}
-#     url = f"{config.get_api_url()}/get_title"
-#     r = requests.get(url, json=data)
-#     assert r.status_code == 200
-#     assert r.json()["title"] == "Aligator"
+def test_get_book_title_from_source(tear_down):
+    add_rows_to_db()
+    searched_book_title = "Aligator"
+    data = {"title":searched_book_title}
+    url = f"{config.get_api_url()}/get_title"
+    r = requests.get(url, json=data)
+    assert r.status_code == 200
+    assert r.json()["title"] == "Aligator"
+# TO OD 
+# add unhhapy path to get title
 
 # def test_foo():
 #     searched_book_title = "Abi ma pla"
