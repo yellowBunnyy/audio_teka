@@ -2,11 +2,11 @@ from fastapi import Depends, FastAPI, HTTPException, Request
 from sqlalchemy.orm import Session
 from fastapi.responses import HTMLResponse
 import pdb
+from services_layer import handlers
 
 from src.domain import schemas
-from src.adapters import repository
 from tests.conftest import engine, SessionLocal
-from src.services_layer import service, unit_of_work
+from src.services_layer import unit_of_work
 from src.adapters import orm
 
 
@@ -41,7 +41,7 @@ def pong():
 def create_title(title: schemas.TitleSchema, session_factory: Session = Depends(get_db)):
     uow = unit_of_work.SqlAlchemyUnitOfWork(session_factory)
     try:
-        return service.add_title(title.title, uow)
+        return handlers.add_title(title.title, uow)
     except:
         raise HTTPException(status_code=400, detail=f"title: {title.title} is in db!!")
 
@@ -50,8 +50,8 @@ def create_title(title: schemas.TitleSchema, session_factory: Session = Depends(
 def get_title(title: schemas.TitleSchema, session_factory: Session = Depends(get_db)):
     uow = unit_of_work.SqlAlchemyUnitOfWork(session_factory)
     try:
-        title = service.get_title(title.title, uow)
+        title = handlers.get_title(title.title, uow)
         return title
-    except service.NotTitleInSourceException:
+    except handlers.NotTitleInSourceException:
         raise HTTPException(status_code=400, detail=f"title: {title.title} not in db!!")
 

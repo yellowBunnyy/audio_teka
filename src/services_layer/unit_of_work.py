@@ -4,11 +4,24 @@ from abc import ABC, abstractmethod
 from src.adapters import repository
 
 class AbstractUnitOfWork(ABC):
+    repo: repository.AbstractRepository
+
+    def __enter__(self):
+        return self
+
     def __exit__(self, *args):
         self.rollback()
     
-    @abstractmethod
     def commit(self):
+        self._commit()
+
+    def collect_new_events(self):
+        for title in self.titles.seen:
+            while title.events:
+                yield title.events.pop(0)
+
+    @abstractmethod
+    def _commit(self):
         raise NotImplementedError
 
     @abstractmethod
@@ -17,6 +30,7 @@ class AbstractUnitOfWork(ABC):
 
 
 class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
+    
 
     def __init__(self, session_factory):
         self.session_factory = session_factory
@@ -24,13 +38,13 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
     def __enter__(self):
         self.session = self.session_factory()
         self.repo = repository.SQLReopsitory(self.session)
-
+        return super().__enter__()
 
     def __exit__(self, *args):
         super().__exit__(*args)
         self.session.close()
 
-    def commit(self):
+    def _commit(self):
         self.session.commit()
     
     def rollback(self):

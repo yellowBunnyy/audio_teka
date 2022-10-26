@@ -1,20 +1,30 @@
 from abc import ABC, abstractmethod
-from requests import session
 from sqlalchemy import text, delete
 from typing import Dict
 import pdb
-
 
 from src.domain import model, schemas
 
 
 class AbstractRepository(ABC):
-    @abstractmethod
+    
+    def __init__(self):
+        self.seen = []
+        
     def add(self, title: str):
-        raise NotImplementedError
+        self._add(title)
+        self.seen.append(title)
 
-    @abstractmethod
-    def get(self, title):
+    def get(self, title:str)-> schemas.TitleSchema:
+        title = self._get(title)
+        if title:
+            self.seen.append(title)
+        return title
+
+    def _add(self):
+        raise NotImplementedError
+    
+    def _get(self):
         raise NotImplementedError
 
     @abstractmethod
@@ -33,13 +43,15 @@ class AbstractRepository(ABC):
 class SQLReopsitory(AbstractRepository):
     def __init__(self, session):
         self.session = session
+        super().__init__()
+        
 
-    def add(self, title: str):
+    def _add(self, title: str):
         db_title = model.Title(title=title)
         self.session.add(db_title)
         return f"added {title}"
 
-    def get(self, title: str):
+    def _get(self, title: str)-> schemas.TitleSchema:
         return (
             self.session.query(model.Title).filter(model.Title.title == title).first()
         )
