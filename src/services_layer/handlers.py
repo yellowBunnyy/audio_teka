@@ -18,7 +18,6 @@ def add_title(event: events.AddBookTitle, uow: unit_of_work.AbstractUnitOfWork):
     with uow:
         existing_title = uow.repo.get(event.title)
         if existing_title:
-            
             raise TitleExistingInSource("Title: {title} exists in source!")
         uow.repo.add(event.title)
         uow.commit()

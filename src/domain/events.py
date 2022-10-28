@@ -23,3 +23,7 @@ class DeleteAllRows(Event):
 @dataclass
 class SaveAllTitlesInDB(Event):
     pass
+
+@dataclass
+class FakeEvent(Event):
+    massage: str

@@ -15,11 +15,6 @@ class AbstractUnitOfWork(ABC):
     def commit(self):
         self._commit()
 
-    def collect_new_events(self):
-        for title in self.repo.seen:
-            while title.events:
-                yield title.events.pop(0)
-
     @abstractmethod
     def _commit(self):
         raise NotImplementedError
