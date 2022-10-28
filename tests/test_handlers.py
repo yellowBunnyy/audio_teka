@@ -6,11 +6,12 @@ from src.services_layer import unit_of_work, messagebus
 class FakeRepository(repository.AbstractRepository):
     def __init__(self, source):
         self.titles_source = set(source)
+        self.seen = []
 
-    def add(self, title: str):
+    def _add(self, title: str):
         self.titles_source.add(title)
 
-    def get(self, title: str):
+    def _get(self, title: str):
         title_source = [schemas.TitleSchema(title=book_title) for book_title in self.titles_source]
         try:
             return next(

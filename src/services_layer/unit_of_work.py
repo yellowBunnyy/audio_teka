@@ -16,7 +16,7 @@ class AbstractUnitOfWork(ABC):
         self._commit()
 
     def collect_new_events(self):
-        for title in self.titles.seen:
+        for title in self.repo.seen:
             while title.events:
                 yield title.events.pop(0)
 

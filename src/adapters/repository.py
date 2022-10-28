@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from sqlalchemy import text, delete
+from sqlalchemy import text
 from typing import Dict
 import pdb
 
@@ -21,9 +21,10 @@ class AbstractRepository(ABC):
             self.seen.append(title)
         return title
 
+    @abstractmethod
     def _add(self):
         raise NotImplementedError
-    
+    @abstractmethod
     def _get(self):
         raise NotImplementedError
 
