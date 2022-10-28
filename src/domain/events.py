@@ -27,3 +27,4 @@ class SaveAllTitlesInDB(Event):
 @dataclass
 class FakeEvent(Event):
     massage: str
+
