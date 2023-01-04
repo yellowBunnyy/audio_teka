@@ -2,7 +2,7 @@ from typing import Dict
 import pdb
 
 
-from src.domain import schemas, preprocessing, events, model
+from src.domain import schemas, api_scraper, events, model
 from src.services_layer import unit_of_work
 
 
@@ -50,7 +50,7 @@ def delete_all_rows(event:events.DeleteAllRows, uow: unit_of_work.AbstractUnitOf
         return uow.repo.get_all_rows()
 
 def save_all_titles_to_db(event: events.SaveAllTitlesInDB, uow: unit_of_work.AbstractUnitOfWork):
-    titles = preprocessing.main()
+    titles = api_scraper.main()
     with uow:
         for title in titles:
             uow.repo.add(title)

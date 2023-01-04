@@ -12,7 +12,7 @@ def get_json(api_url: str) -> dict:
     return json.loads(r.text)
 
 def get_all_titles() -> list[str]:
-    total_titles = []
+    total_titles_set = set()
     offset = 30
     max_title = 1000
     temp_last_id_from = ''
@@ -23,16 +23,22 @@ def get_all_titles() -> list[str]:
         for i, item_json in enumerate(items_list):
             if i == offset - 1:
                 temp_last_id_from = item_json.get("id")
-            total_titles.append(item_json.get("name"))
+            total_titles_set.add(item_json.get("name"))
         # fuse: for end forloop when we don't have no more items
         if len(items_list) < offset - 2:
             break
-    return total_titles
+    return total_titles_set
 
 def show_all_title(titles: list[str]):
     for title in titles:
         print(title)
     print("*"*10)
     print(len(titles))
-titles = get_all_titles()
-show_all_title(titles)
+
+def main():
+    return get_all_titles()
+
+
+if __name__ == '__main__':
+    main()
+    
