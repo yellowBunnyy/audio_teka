@@ -1,6 +1,7 @@
 from fastapi import Depends, FastAPI, HTTPException, Request
 from sqlalchemy.orm import Session
 from fastapi.responses import HTMLResponse
+import json
 import pdb
 
 from src.domain import schemas, events
@@ -56,4 +57,16 @@ def get_title(title: schemas.TitleSchema, session_factory: Session = Depends(get
         return result.pop(0)
     except handlers.NotTitleInSourceException:
         raise HTTPException(status_code=400, detail=f"title: {title.title} not in db!!")
+
+@app.get("/fill_db")
+def load_all_items_to_db(session_factory: Session = Depends(get_db)):
+    uow = unit_of_work.SqlAlchemyUnitOfWork(session_factory)
+    event = events.SaveAllTitlesInDB()
+    # result = messagebus.handle(event, uow)
+    handlers.save_all_titles_to_db(event=event, uow=uow)
+    response = {"status_code": 200,
+                "message": "db was upload"}
+    return json.dumps(response)
+
+
 
