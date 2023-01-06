@@ -113,7 +113,11 @@ wsproto             1.2.0
 Application architecture in Python
 Harry Percival, Bob Gregory
 #### run app
-uvicorn src.entrypoints.my_app:app --host 0.0.0.0 --port 5000
-#### send request to api:
-curl http://localhost:5000/ping 
+```$ uvicorn src.entrypoints.my_app:app --host 0.0.0.0 --port 5000```
+#### send request to api to test it:
+```$ curl http://localhost:5000/ping```
+#### run scraper
+```$ curl http://localhost:5000/fill_db```
+#### get title from db
+```$ curl http://localhost:5000/get_title```
 
