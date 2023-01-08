@@ -1,8 +1,6 @@
 from fastapi import Depends, FastAPI, HTTPException, Request
 from sqlalchemy.orm import Session
 from fastapi.responses import HTMLResponse
-import json
-import pdb
 
 from src.domain import schemas, events
 from tests.conftest import engine, SessionLocal
@@ -36,8 +34,7 @@ def pong():
     """
     return HTMLResponse(html_response)
 
-
-@app.post("/add_title", response_model=schemas.TitleSchema)
+@app.post("/add_title/", response_model=schemas.TitleSchema)
 def create_title(title: schemas.TitleSchema, session_factory: Session = Depends(get_db)):
     uow = unit_of_work.SqlAlchemyUnitOfWork(session_factory)
     try:
@@ -47,16 +44,17 @@ def create_title(title: schemas.TitleSchema, session_factory: Session = Depends(
     except handlers.TitleExistingInSource:
         raise HTTPException(status_code=400, detail=f"title: {title.title} is in db!!")
 
-
-@app.get("/get_title", response_model=schemas.TitleSchema)
-def get_title(title: schemas.TitleSchema, session_factory: Session = Depends(get_db)):
+@app.get("/get_title/", response_model=schemas.ResponseToClient)
+def get_title(title: str, session_factory: Session = Depends(get_db)):
     uow = unit_of_work.SqlAlchemyUnitOfWork(session_factory)
     try:
-        event = events.GetBookTitle(title=title.title)
+        event = events.GetBookTitle(title=title)
         result = messagebus.handle(event, uow)
-        return result.pop(0)
+        response = {"status_code": 200,
+        "message": f"Title {result.pop(0)} in sutsription."}
+        return schemas.ResponseToClient(**response)
     except handlers.NotTitleInSourceException:
-        raise HTTPException(status_code=400, detail=f"title: {title.title} not in db!!")
+        raise HTTPException(status_code=200, detail=f"title: {title} not in subscription!!")
 
 @app.get("/fill_db")
 def load_all_items_to_db(session_factory: Session = Depends(get_db)):
@@ -66,7 +64,4 @@ def load_all_items_to_db(session_factory: Session = Depends(get_db)):
     handlers.save_all_titles_to_db(event=event, uow=uow)
     response = {"status_code": 200,
                 "message": "db was upload"}
-    return json.dumps(response)
-
-
-
+    return response

@@ -6,3 +6,7 @@ class TitleSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+class ResponseToClient(BaseModel):
+    status_code: int
+    message: str

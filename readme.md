@@ -119,5 +119,5 @@ Harry Percival, Bob Gregory
 #### run scraper
 ```$ curl http://localhost:5000/fill_db```
 #### get title from db
-```$ curl http://localhost:5000/get_title```
+```$ curl http://localhost:5000/get_title/?title=[title]``` [title] searched title in subscription
 

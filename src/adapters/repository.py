@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from sqlalchemy import text
 from typing import Dict
-import pdb
 
 from src.domain import model, schemas
 
