@@ -28,7 +28,7 @@ def pong():
     }
     html_response=f"""
     <h1>
-        Welcome to FastAPI.
+        Welcome to FastAPI/albo co tam chcemy.
         {data['ping']}.
     </h1>
     """

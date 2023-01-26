@@ -1,0 +1,26 @@
+version: "3.3"
+services:
+  fast_api_service:
+    build: .
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn src.entrypoints.my_app:app --host 0.0.0.0 --port 5000'
+    ports:
+      - 5000:5000
+    environment:
+      - MY_DB_HOST=localhost
+      - MY_DB_PASS=test1
+      - DB_USER_NAME=krzeemo
+    depends_on:
+      - db
+    volumes:
+      - .:/usr/my_app
+      - ./src/:/src/
+      - ./tests:/tests
+    
+  db:
+    image: 'postgres:latest'
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=krzeemo 
+      - POSTGRES_PASSWORD=test1 
+      - POSTGRES_DB=audio
