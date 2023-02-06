@@ -2,9 +2,9 @@ version: "3.3"
 services:
   fast_api_service:
     build: .
-    command: 'uvicorn src.entrypoints.my_app:app --host localhost --port 5000'
+    command: 'uvicorn src.entrypoints.my_app:app --host=0.0.0.0 --port=8000'
     ports:
-      - 5000:5000
+      - 8000:8000
     environment:
       - DB_URI=postgresql://krzeemo:test1@db/audio
     depends_on:
@@ -17,8 +17,6 @@ services:
       - db
   db:
     image: 'postgres:latest'
-    ports:
-      - 5432:5432
     environment:
       - POSTGRES_USER=krzeemo 
       - POSTGRES_PASSWORD=test1 
