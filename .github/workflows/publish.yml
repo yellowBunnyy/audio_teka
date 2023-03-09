@@ -34,7 +34,7 @@ jobs:
           context: ./
           # Note: tags has to be all lower-case
           tags: |             
-            ghcr.io/yellowBunnyy/audio_teka:latest
+            ghcr.io/yellowbunnyy/audio_teka:latest
           # build on feature branches, push only on main branch
           # push: ${{ github.ref == 'refs/heads/main' }}
 
