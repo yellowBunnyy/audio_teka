@@ -15,4 +15,4 @@ RUN pip install --no-cache-dir --upgrade -r /usr/my_app/requirements.txt
 COPY ./src /usr/my_app/src
 COPY ./tests /usr/my_app/tests
 
-# CMD ["uvicorn", "src.entrypoints.my_app:app", "--host", "0.0.0.0", "--port", "5000"]
+
