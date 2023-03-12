@@ -8,7 +8,7 @@ on:
 
 env:
   DOCKER_REGISTRY: ghcr.io
-  DOCKER_REPOSITORY: yellowBunnyy/audio_teka
+  DOCKER_REPOSITORY: yellowbunnyy/audio_teka
 
 
 jobs:
