@@ -10,7 +10,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ my_app_audio }}
+  IMAGE_NAME: ${{ yellowbunnyy/audio_teka }}
 
 jobs:
   build-and-push-image:
